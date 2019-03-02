@@ -2,7 +2,8 @@
   "plugins": [
     "prettier",
     "react",
-    "import"
+    "import",
+    "jest"
   ],
   "parser": "babel-eslint",
   "parserOptions": {
@@ -15,10 +16,13 @@
   "env": {
     "es6": true,
     "browser": true,
-    "node": true
+    "node": true,
+    "jest/globals": true
+  },
+  "globals": {
+    "graphql": false
   },
   "rules": {
-    "array-callback-return": "off",
     "arrow-parens": "off",
     "comma-dangle": "off",
     "consistent-return": "off",
@@ -26,22 +30,17 @@
     "function-paren-newline": "off",
     "import/extensions": "error",
     "import/first": "error",
-    "import/order": "error",
-    "import/no-duplicates" : "error",
     "import/no-extraneous-dependencies": "off",
     "import/no-named-as-default": "off",
     "import/no-unresolved": "error",
     "import/prefer-default-export": "off",
     "indent": "off", // in conflict with prettier
     "jsx-a11y/anchor-is-valid": "off",
-    "jsx-a11y/no-redundant-roles": "off",
     "max-len": 0, // in conflict with prettier
     "no-confusing-arrow": "off",
+    "no-undef": "error",
     "no-else-return": "error",
-    "no-nested-ternary": "off",
     "no-return-assign": "off",
-    "no-param-reassign": "off",
-    "no-undef": "off", // throw error on graphql queries
     "no-unused-vars": "error",
     "no-use-before-define": "error",
     "object-curly-newline": "off",
@@ -59,7 +58,6 @@
     "react/no-unescaped-entities": "off",
     "react/no-unused-state": "off",
     "react/prefer-stateless-function": "error",
-    "react/prop-types": "error",
     "react/require-default-props": 2,
     "react/sort-comp": 2,
     "semi": "off"

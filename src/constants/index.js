@@ -26,12 +26,6 @@ const constants = {
   area: ['Central', 'North', 'East', 'South', 'West'],
   audience: ['Youth', '16+', '18+', 'Families'],
   timeOfDay: ['Morning', 'Afternoon', 'Evening'],
-  sponsorLevels: {
-    headline: 'Headline',
-    gold: 'Gold',
-    silver: 'Silver',
-    bronze: 'Bronze',
-  },
   itemsToLoad: 24,
   dateFormat: 'DD/MM/YYYY',
 }

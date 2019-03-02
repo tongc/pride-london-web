@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { media } from '../../theme/media'
 import checkmark from '../../theme/assets/images/icon-check.svg'
+import theme from '../../theme/theme'
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,14 +17,14 @@ const Input = styled.input`
   width: 20px;
   height: 20px;
   border-radius: 2px;
-  border: solid 2.5px ${props => props.theme.colors.eucalyptusGreen};
-  background-color: ${props => props.theme.colors.white};
+  border: solid 2.5px ${theme.colors.eucalyptusGreen};
+  background-color: ${theme.colors.white};
   order: 1;
   flex-shrink: 0;
   cursor: pointer;
 
   &:focus {
-    border-color: ${props => props.theme.colors.indigo};
+    border-color: ${theme.colors.indigo};
     outline: none;
   }
 

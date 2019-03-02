@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { rgba } from 'polished'
 import styled from 'styled-components'
 import { media } from '../../theme/media'
+import { rgba } from 'polished'
 import { Consumer } from '../appContext'
 import Checkbox from '../checkbox'
 import constants from '../../constants'
+import theme from '../../theme/theme'
 
 const List = styled.ul`
   list-style: none;
@@ -13,25 +14,29 @@ const List = styled.ul`
   margin: 0;
   border-top: 2px solid transparent;
   box-sizing: border-box;
-  background-color: ${props => props.theme.colors.white};
+  background-color: ${theme.colors.white};
 
   ${media.tablet`
-    box-shadow: 0 2px 4px 0 ${props => rgba(props.theme.colors.black, 0.2)};
+    box-shadow: 0 2px 4px 0 ${rgba(theme.colors.black, 0.2)};
   `};
 `
 const ListItem = styled.li`
-  padding: 8px 10px;
+  padding: 8px 0;
 
   &:last-child {
     margin-bottom: 0;
   }
+
+  ${media.mobile`
+  padding: 8px 10px;
+  `};
 
   ${media.tablet`
     transition: background-color 0.15s linear;
     border-radius: 4px;
     
     &:hover {
-      background-color: ${props => props.theme.colors.lightGrey};
+      background-color: ${theme.colors.lightGrey};
     }
   `};
 `

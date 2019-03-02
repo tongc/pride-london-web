@@ -1,11 +1,12 @@
 import React from 'react'
-import { shallow } from 'enzyme'
 import renderer from 'react-test-renderer'
-import StyledBannerSubtitle from './'
 import 'jest-styled-components'
+import { shallow } from 'enzyme'
+
+import StyledBannerSubtitle from './'
 
 describe('BannerSubtitle', () => {
-  it('renders', () => {
+  it('should render', () => {
     const wrapper = shallow(
       <StyledBannerSubtitle>
         <h1>Hey</h1>
@@ -14,7 +15,7 @@ describe('BannerSubtitle', () => {
     expect(wrapper).toMatchSnapshot()
   })
 
-  it('renders a Wrapper', () => {
+  it('should render a Wrapper', () => {
     const wrapper = shallow(
       <StyledBannerSubtitle>
         <h1>Hey</h1>
@@ -23,7 +24,7 @@ describe('BannerSubtitle', () => {
     expect(wrapper.find('SubtitleWrapper')).toHaveLength(1)
   })
 
-  it('renders a Text', () => {
+  it('should render a Text', () => {
     const wrapper = shallow(
       <StyledBannerSubtitle>
         <h1>Hey</h1>
@@ -32,12 +33,9 @@ describe('BannerSubtitle', () => {
     expect(wrapper.find('SubtitleText')).toHaveLength(1)
   })
 
-  it('renders child text ', () => {
+  it('should render child text ', () => {
     const text = 'And here is a test subtitle!'
-    const wrapper = shallow(
-      <StyledBannerSubtitle>
-        {text}
-      </StyledBannerSubtitle>)
+    const wrapper = shallow(<StyledBannerSubtitle>{text}</StyledBannerSubtitle>)
     expect(wrapper).toMatchSnapshot()
   })
 })

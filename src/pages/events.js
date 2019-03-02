@@ -1,20 +1,20 @@
 import React, { Fragment, Component } from 'react'
-import PropTypes from 'prop-types'
+import Helmet from 'react-helmet'
 import FlipMove from 'react-flip-move'
 import styled from 'styled-components'
-import moment from 'moment'
-import noScroll from 'no-scroll'
 import { media } from '../theme/media'
 import theme from '../theme/theme'
-import { EventListingCard } from '../features/events'
-import EventsFilters from '../features/events/components/eventsFilters'
+import { EventListingCard } from '../components/events'
+import EventsFilters from '../components/events/eventsFilters'
 import ImageBanner from '../components/imageBanner'
 import Button from '../components/button'
 import { Container, Row, Column } from '../components/grid'
 import { Consumer } from '../components/appContext'
-import { filterByLimit } from '../features/events/helpers'
+import { filterByLimit } from '../components/events/helpers'
 import { dateFormat } from '../constants'
 import filterIcon from '../theme/assets/images/icon-filters.svg'
+import noScroll from 'no-scroll'
+import moment from 'moment'
 
 const FlexColumn = styled(Column)`
   display: block;
@@ -33,10 +33,16 @@ const StyledFlipMove = styled(FlipMove)`
   flex-basis: 100%;
 `
 
+const CardWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+`
+
 const ContainerAddFilters = styled(Container)`
   padding: 20px 0;
   margin-bottom: 20px;
-  background-color: ${props => props.theme.colors.white};
+  background-color: ${theme.colors.white};
 
   ${media.tablet`
     display: none;
@@ -64,7 +70,7 @@ const OffsetContainer = styled(Container)`
 const EventCount = styled.p`
   font-size: 0.875rem;
   line-height: 1.214;
-  color: ${props => props.theme.colors.darkGrey};
+  color: ${theme.colors.darkGrey};
 `
 
 const DateGroupHeading = styled.h2`
@@ -78,48 +84,6 @@ const DateGroupHeading = styled.h2`
 const FilterIcon = styled.img`
   margin: 0 6px -2px 0;
 `
-/* eslint-disable */
-class GroupedEventsCards extends Component {
-  static propTypes = {
-    events: PropTypes.array.isRequired,
-    index: PropTypes.number.isRequired,
-    event: PropTypes.object.isRequired,
-  }
-  render() {
-    const { event, index, events } = this.props
-
-    let header
-    const longDayOfMonth = 'dddd D MMM'
-
-    if (index === 0) {
-      header = moment(event.node.startTime).format(longDayOfMonth)
-    } else {
-      const startDate = moment(event.node.startTime).format(dateFormat)
-      const prevStartDate = moment(events[index - 1].node.startTime).format(
-        dateFormat
-      )
-
-      if (startDate !== prevStartDate) {
-        header = moment(event.node.startTime).format(longDayOfMonth)
-      }
-    }
-    return (
-      <FlexColumn
-        width={[
-          1, // 100% between 0px screen width and first breakpoint (375px)
-          1, // 100% between first breakpoint(375px) and second breakpoint (768px)
-          1 / 2, // 50% between second breakpoint(768px) and third breakpoint (1024px)
-          1 / 3, // 33% between third breakpoint(1280px) and fourth breakpoint (1440px)
-        ]}
-        key={event.node.id}
-      >
-        {header && <DateGroupHeading>{header}</DateGroupHeading>}
-        <EventListingCard event={event.node} />
-      </FlexColumn>
-    )
-  }
-}
-/* eslint-enable */
 
 class Events extends Component {
   state = {
@@ -136,6 +100,39 @@ class Events extends Component {
     )
   }
 
+  renderCard = (event, index, events) => {
+    let header
+    const longDayOfMonth = 'dddd D MMM'
+
+    if (index === 0) {
+      header = moment(event.node.startTime).format(longDayOfMonth)
+    } else {
+      const startDate = moment(event.node.startTime).format(dateFormat)
+      const prevStartDate = moment(events[index - 1].node.startTime).format(
+        dateFormat
+      )
+
+      if (startDate !== prevStartDate) {
+        header = moment(event.node.startTime).format(longDayOfMonth)
+      }
+    }
+
+    return (
+      <FlexColumn
+        width={[
+          1, // 100% between 0px screen width and first breakpoint (375px)
+          1, // 100% between first breakpoint(375px) and second breakpoint (768px)
+          1 / 2, // 50% between second breakpoint(768px) and third breakpoint (1024px)
+          1 / 3, // 33% between third breakpoint(1280px) and fourth breakpoint (1440px)
+        ]}
+        key={event.node.id}
+      >
+        {header && <DateGroupHeading>{header}</DateGroupHeading>}
+        <EventListingCard event={event.node} />
+      </FlexColumn>
+    )
+  }
+
   renderEventCount = (filteredCount, eventsToShow) => {
     let text
 
@@ -144,11 +141,33 @@ class Events extends Component {
         eventsToShow <= filteredCount ? eventsToShow : filteredCount
       } of ${filteredCount} events`
     } else {
-      text =
-        'There are no events matching your criteria. Please try changing your filter options.'
+      text = `There are no events matching your criteria. Please try changing your filter options.`
     }
 
     return <EventCount>{text}</EventCount>
+  }
+
+  isMobile() {
+    return typeof window !== 'undefined' && window.innerWidth < 1024
+  }
+
+  renderEventCards(context) {
+    const cards = context.filteredEvents
+      .filter(filterByLimit, context.state.eventsToShow)
+      .map((event, index, events) => this.renderCard(event, index, events))
+
+    if (this.isMobile()) {
+      return cards
+    }
+
+    // only use flip-move for the top few rows, so you get the
+    // transtions when applying filters but not when loading more
+    return (
+      <CardWrapper>
+        <StyledFlipMove>{cards.slice(0, 12)}</StyledFlipMove>
+        {cards.slice(12)}
+      </CardWrapper>
+    )
   }
 
   render() {
@@ -156,9 +175,19 @@ class Events extends Component {
       <Consumer>
         {context => (
           <Fragment>
+            <Helmet
+              meta={[
+                {
+                  name: 'apple-itunes-app',
+                  content: `app-id=${
+                    this.props.data.site.siteMetadata.appleAppId
+                  }`,
+                },
+              ]}
+            />
             <ImageBanner
               titleText="What's on"
-              subtitleText="Checkout the huge array of events that Pride are running during the festival"
+              subtitleText="Check out the huge array of events that Pride are running during the festival"
               imageSrc=""
               altText=""
               color={theme.colors.beachBlue}
@@ -195,18 +224,7 @@ class Events extends Component {
             </ContainerAddFilters>
             <Container>
               <Row>
-                <StyledFlipMove>
-                  {context.filteredEvents
-                    .filter(filterByLimit, context.state.eventsToShow)
-                    .map((event, index, events) => (
-                      <GroupedEventsCards
-                        events={events}
-                        index={index}
-                        event={event}
-                        key={event.node.id}
-                      />
-                    ))}
-                </StyledFlipMove>
+                {this.renderEventCards(context)}
                 <ColumnPagination width={1}>
                   {this.renderEventCount(
                     context.filteredEvents.length,
@@ -239,3 +257,13 @@ class Events extends Component {
 }
 
 export default Events
+
+export const query = graphql`
+  query EventsPageQuery {
+    site {
+      siteMetadata {
+        appleAppId
+      }
+    }
+  }
+`

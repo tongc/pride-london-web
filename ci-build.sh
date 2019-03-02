@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+
+if test $1 = production ; then
+  export CONTENTFUL_EVENTS_ID=$CONTENTFUL_EVENTS_ID_PRODUCTION
+  export CONTENTFUL_EVENTS_TOKEN=$CONTENTFUL_EVENTS_TOKEN_PRODUCTION
+  export GATSBY_PUBLIC_DOMAIN='events.prideinlondon.org'
+else
+  export CONTENTFUL_EVENTS_ID=$CONTENTFUL_EVENTS_ID_DEVELOPMENT
+  export CONTENTFUL_EVENTS_TOKEN=$CONTENTFUL_EVENTS_TOKEN_DEVELOPMENT
+  export GATSBY_PUBLIC_DOMAIN="pride-in-london-$1.now.sh"
+fi
+
+yarn build

@@ -4,9 +4,10 @@ import styled from 'styled-components'
 import shortid from 'shortid'
 import Link from 'gatsby-link'
 import { Column } from '../grid/'
+import theme from '../../theme/theme'
 
 const StyledLink = styled(Link)`
-  color: ${props => props.theme.colors.white};
+  color: ${theme.colors.white};
   font-size: 20px;
   font-weight: 600;
   margin: 0 10px 0 10px;
@@ -23,8 +24,8 @@ const StyledButton = styled(Link)`
   font-weight: 600;
   text-decoration: none;
   border-radius: 4px;
-  color: ${props => props.theme.colors.indigo};
-  background-color: ${props => props.theme.colors.eucalyptusGreen};
+  color: ${theme.colors.indigo};
+  background-color: ${theme.colors.eucalyptusGreen};
 `
 StyledButton.displayName = 'ButtonTest'
 
@@ -38,7 +39,7 @@ const NavItems = props => {
       </Column>
       {listItems.map(items => (
         <Column key={shortid.generate()}>
-          <StyledLink to="#">{items}</StyledLink>
+          <StyledLink to="#"> {items}</StyledLink>
         </Column>
       ))}
       <Column>

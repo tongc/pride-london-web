@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Container, Row } from '../grid'
 import NavItems from './navItems'
+import theme from '../../theme/theme'
 
 const StyledContainer = styled(Container)`
-  background-color: ${props => props.theme.colors.indigo};
-  color: ${props => props.theme.colors.white};
+  background-color: ${theme.colors.indigo};
+  color: ${theme.colors.white};
   height: 100px;
 `
 

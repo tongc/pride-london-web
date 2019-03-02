@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
 import {
   filterByDate,
   filterByFree,
@@ -10,8 +9,10 @@ import {
   filterPastEvents,
   getDuration,
   sanitizeDates,
-} from '../../features/events/helpers/index'
-import { itemsToLoad, dateFormat } from '../../constants'
+} from '../events/helpers'
+import { itemsToLoad } from '../../constants'
+import { dateFormat } from '../../constants'
+import moment from 'moment'
 
 const AppContext = React.createContext()
 const { Consumer } = AppContext
@@ -58,7 +59,7 @@ class Provider extends Component {
             moment(event.node.startTime).format(dateFormat),
             ...event.node.recurrenceDates,
           ])
-          const time = moment(event.node.startTime).format('HH:mm')
+          const time = moment(event.node.startTime)
           const duration = getDuration(event.node.startTime, event.node.endTime)
 
           recurrenceDates.forEach(date => {
@@ -66,20 +67,30 @@ class Provider extends Component {
             const copy = JSON.parse(JSON.stringify(event))
 
             // Modify start time and end time
-            copy.node.startTime = moment(
-              `${date} ${time}`,
-              'DD/MM/YYYY hh:mm'
-            ).format()
+            copy.node.startTime = moment(date)
+              .minutes(time.minutes())
+              .hours(time.hours())
+              .format()
+
             copy.node.endTime = moment(copy.node.startTime)
               .add(duration, 'milliseconds')
               .format()
-            copy.node.id = `${event.node.id}-${date.split('/').join('')}`
+            copy.node.id = `${event.node.id}-${moment(date).format('YYYYMMDD')}`
 
             allEventOccurences.push(copy)
           })
         }
       })
-      return { events: allEventOccurences.filter(filterPastEvents) }
+
+      const events = allEventOccurences.filter(filterPastEvents)
+
+      events.sort(
+        (eventA, eventB) =>
+          moment(eventA.node.startTime).unix() -
+          moment(eventB.node.startTime).unix()
+      )
+
+      return { events }
     }
   }
 
@@ -88,8 +99,8 @@ class Provider extends Component {
       ...prevState,
       filters: {
         ...prevState.filters,
-        startDate,
-        endDate,
+        startDate: startDate ? startDate.toISOString() : null,
+        endDate: endDate ? endDate.toISOString() : null,
       },
     }))
   }
@@ -144,7 +155,7 @@ class Provider extends Component {
   }
 
   closeSiblingFilters = (filterName, isOpen) => {
-    if (isOpen && filterName != this.state.filterOpen) {
+    if (isOpen && filterName != this.state.openFilter) {
       this.setState(prevState => ({
         ...prevState,
         filterOpen: filterName,
@@ -157,33 +168,43 @@ class Provider extends Component {
     }
   }
 
-  filterEvents = () => {
-    const filteredEvents = this.state.events
-      .filter(filterByDate, {
-        startDate: this.state.filters.startDate,
-        endDate: this.state.filters.endDate,
-      })
-      .filter(filterByFree, this.state.filters.free)
-      .filter(filterByCategory, {
-        array: this.state.filters.eventCategories,
-        key: 'eventCategories',
-      })
-      .filter(filterByCategory, {
-        array: this.state.filters.venueDetails,
-        key: 'venueDetails',
-      })
-      .filter(filterByCategory, {
-        array: this.state.filters.accessibilityOptions,
-        key: 'accessibilityOptions',
-      })
-      .filter(filterByCategory, {
-        array: this.state.filters.audience,
-        key: 'audience',
-      })
-      .filter(filterByArea, this.state.filters.area)
-      .filter(filterByTime, this.state.filters.timeOfDay)
+  previousFilters = null
+  previousFilteredEvents = null
 
-    return filteredEvents
+  filterEvents = () => {
+    if (this.state.filters === this.previousFilters) {
+      return this.previousFilteredEvents
+    }
+    this.previousFilters = this.state.filters
+    this.previousFilteredEvents = this.state.events.filter(
+      event =>
+        filterByCategory(
+          event,
+          'eventCategories',
+          this.state.filters.eventCategories
+        ) &&
+        filterByCategory(
+          event,
+          'venueDetails',
+          this.state.filters.venueDetails
+        ) &&
+        filterByCategory(
+          event,
+          'accessibilityOptions',
+          this.state.filters.accessibilityOptions
+        ) &&
+        filterByCategory(event, 'audience', this.state.filters.audience) &&
+        filterByDate(
+          event,
+          this.state.filters.startDate,
+          this.state.filters.endDate
+        ) &&
+        (!this.state.filters.free || filterByFree(event)) &&
+        filterByArea(event, this.state.filters.area) &&
+        filterByTime(event, this.state.filters.timeOfDay)
+    )
+
+    return this.previousFilteredEvents
   }
 
   showMore = filteredCount => {
@@ -220,11 +241,14 @@ Provider.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]).isRequired,
-  events: PropTypes.array, // eslint-disable-line
+  events: PropTypes.array,
 }
 
 Provider.defaultProps = {
   events: [],
 }
 
-export { Provider, Consumer }
+module.exports = {
+  Provider,
+  Consumer,
+}

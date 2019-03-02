@@ -1,19 +1,19 @@
+require('babel-register')
 const path = require('path')
 const moment = require('moment')
 const {
   sanitizeDates,
-  formatTime,
   getDuration,
-  filterPastEvents,
-} = require('./src/Features/Events/Helpers')
+} = require('./src/components/events/helpers')
+
 const { dateFormat } = require('./src/constants')
 
-exports.createPages = async ({ graphql, actions }) => {
-  const { createPage } = actions
+exports.createPages = ({ graphql, boundActionCreators }) => {
+  const { createPage } = boundActionCreators
 
-  const events = await graphql(`
+  return graphql(`
     {
-      events: allContentfulEvent(filter: {}) {
+      allContentfulEvent(filter: {}) {
         edges {
           node {
             id
@@ -24,41 +24,16 @@ exports.createPages = async ({ graphql, actions }) => {
           }
         }
       }
-      genericContentPages: allContentfulGenericContentPage(filter: {}) {
-        edges {
-          node {
-            id
-            slug
-          }
-        }
-      }
     }
   `).then(result => {
-    console.log(result)
     if (result.errors) {
       throw result.errors
     }
 
-    const GenericContentPage = path.resolve(
-      './src/templates/genericContentPage.js'
-    )
-
-    result.data.genericContentPages.edges.forEach(edge => {
-      console.log(JSON.stringify(edge))
-      createPage({
-        path: `info/${edge.node.slug}/`,
-        component: GenericContentPage,
-        context: {
-          id: edge.node.id,
-        },
-      })
-    })
-
     const eventTemplate = path.resolve('./src/templates/event.js')
-    const prettyDate = 'D MMM YYYY'
-    // Don't create pages for past events
-    result.data.events.edges.filter(filterPastEvents).forEach(edge => {
-      if (!edge.node.recurrenceDates) {
+
+    result.data.allContentfulEvent.edges.forEach(edge => {
+      if (!edge.node.recurrenceDates || !edge.node.recurrenceDates.length) {
         createPage({
           // Each page is required to have a `path` as well
           // as a template component. The `context` is
@@ -68,10 +43,8 @@ exports.createPages = async ({ graphql, actions }) => {
           component: eventTemplate,
           context: {
             id: edge.node.id,
-            startDate: moment(edge.node.startTime).format(prettyDate),
-            endDate: moment(edge.node.endTime).format(prettyDate),
-            startTime: formatTime(edge.node.startTime),
-            endTime: formatTime(edge.node.endTime),
+            startTime: edge.node.startTime,
+            endTime: edge.node.endTime,
           },
         })
       } else {
@@ -81,26 +54,29 @@ exports.createPages = async ({ graphql, actions }) => {
         ])
 
         recurrenceDates.forEach(date => {
-          const customId = `${edge.node.id}-${date.split('/').join('')}`
+          const customId = `${edge.node.id}-${moment(date).format('YYYYMMDD')}`
+          const originalStartTime = moment(edge.node.startTime)
+          const startTime = moment(date)
+            .hours(originalStartTime.hours())
+            .minutes(originalStartTime.minutes())
+            .toISOString()
+          const endTime = moment(startTime)
+            .add(
+              getDuration(edge.node.startTime, edge.node.endTime),
+              'milliseconds'
+            )
+            .toISOString()
           createPage({
             path: `/events/${customId}/`,
             component: eventTemplate,
             context: {
               id: edge.node.id,
-              startDate: moment(date, dateFormat).format(prettyDate),
-              endDate: moment(date, dateFormat)
-                .add(
-                  getDuration(edge.node.startTime, edge.node.endTime),
-                  'milliseconds'
-                )
-                .format(prettyDate),
-              startTime: formatTime(edge.node.startTime),
-              endTime: formatTime(edge.node.endTime),
+              startTime,
+              endTime,
             },
           })
         })
       }
     })
   })
-  return events
 }

@@ -1,7 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CheckboxSet renders 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
-`;
+exports[`CheckboxSet @renders should render 1`] = `<[object Object] />`;

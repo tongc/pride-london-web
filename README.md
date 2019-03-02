@@ -1,10 +1,4 @@
-# Pride London Web
-
-[![CircleCI](https://circleci.com/gh/PrideInLondon/pride-london-web.svg?style=svg)](https://circleci.com/gh/PrideInLondon/pride-london-web)   
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f0c3e56f477040a288ecbe6b8d00b437)](https://www.codacy.com/app/PrideInLondon/pride-london-web?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=PrideInLondon/pride-london-web&amp;utm_campaign=Badge_Grade)   
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/PrideInLondon/pride-london-web.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/PrideInLondon/pride-london-web/context:javascript) [![Total alerts](https://img.shields.io/lgtm/alerts/g/PrideInLondon/pride-london-web.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/PrideInLondon/pride-london-web/alerts/)   
-[![codecov](https://codecov.io/gh/PrideInLondon/pride-london-web/branch/master/graph/badge.svg)](https://codecov.io/gh/PrideInLondon/pride-london-web)   
-[![Known Vulnerabilities](https://snyk.io/test/github/PrideInLondon/pride-london-web/badge.svg?targetFile=package.json)](https://snyk.io/test/github/PrideInLondon/pride-london-web)  
+# pride-london-web-gatsby
 
 This project is a community effort to release a brand new web platform to supplant and improve upon the product currently available at prideinlondon.org.
 
@@ -26,6 +20,7 @@ npm install --global gatsby-cli
 3.  Install nvm from [here](https://github.com/creationix/nvm)
 4.  Make sure you're using the correct version of node `nvm use`
 5.  Ensure you have [yarn](https://yarnpkg.com/en/docs/install) installed. 
+6.  Run yarn in the root directory to pull in dependencies.
 
 ## ENVIRONMENT VARIABLES
 
@@ -35,10 +30,11 @@ npm install --global gatsby-cli
 
 ## Running 🏃
 
+Then you can run it by:
+
 ```sh
 gatsby develop
 ```
-Make sure you have the correct Contentful configuration or the project won't run.
 
 ## Tests
 

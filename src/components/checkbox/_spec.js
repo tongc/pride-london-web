@@ -1,8 +1,10 @@
 import React from 'react'
-import { shallow } from 'enzyme'
-import theme from '../../theme/theme'
-import Checkbox from './'
+import renderer from 'react-test-renderer'
 import 'jest-styled-components'
+import { shallow } from 'enzyme'
+
+import Checkbox from './'
+import theme from '../../theme/theme'
 
 // SVGs need to be mocked as the SVG output causes Babel to throw
 jest.mock('../../theme/assets/images/icon-check.svg', () => 'foo')
@@ -26,48 +28,50 @@ describe('Checkbox', () => {
 
   const wrapper = shallow(<Checkbox {...props} />, { context: { theme } })
 
-  it('renders', () => {
-    expect(wrapper).toMatchSnapshot()
+  describe('@renders', () => {
+    it('should render', () => {
+      expect(wrapper).toMatchSnapshot()
+    })
+    describe('input', () => {
+      it('should have id from props', () => {
+        expect(wrapper.find('[type="checkbox"]').props().id).toBe(id)
+      })
+
+      it('should have name from props', () => {
+        expect(wrapper.find('[type="checkbox"]').props().name).toBe(name)
+      })
+
+      it('should have value from props', () => {
+        expect(wrapper.find('[type="checkbox"]').props().value).toBe(value)
+      })
+    })
+
+    describe('label', () => {
+      it('should have htmlFor from props', () => {
+        expect(wrapper.find('[htmlFor="test"]')).toHaveLength(1)
+      })
+
+      it('should have text from props ', () => {
+        expect(
+          wrapper
+            .find('[htmlFor="test"]')
+            .dive()
+            .text()
+        ).toBe(label)
+      })
+    })
   })
-  
-  describe('input', () => {
-    it('has id from props', () => {
-      expect(wrapper.find('[type="checkbox"]').props().id).toBe(id)
-    })
 
-    it('has name from props', () => {
-      expect(wrapper.find('[type="checkbox"]').props().name).toBe(name)
-    })
-
-    it('has value from props', () => {
-      expect(wrapper.find('[type="checkbox"]').props().value).toBe(value)
-    })
-  })
-
-  describe('label', () => {
-    it('has htmlFor from props', () => {
-      expect(wrapper.find('[htmlFor="test"]')).toHaveLength(1)
-    })
-
-    it('has text from props ', () => {
-      expect(
-        wrapper
-          .find('[htmlFor="test"]')
-          .text()
-      ).toBe(label)
-    })
-  })
-
-  describe('events', () => {
+  describe('@events', () => {
     const event = { target: { checked: true } }
 
-    xit('toggles its checked state when changed', () => {
+    it('should toggle its checked state when changed', () => {
       expect(wrapper.state().checked).toBeFalsy()
       wrapper.find('#test').simulate('change', event)
       expect(wrapper.state().checked).toBeTruthy()
     })
 
-    it('fires the handleChange prop with an event when changed', () => {
+    it('should fire the handleChange prop with an event when changed', () => {
       wrapper.find('#test').simulate('change', event)
       expect(handleChange).toHaveBeenCalledWith(event)
     })
