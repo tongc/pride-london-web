@@ -182,6 +182,7 @@ const Home = ({
     //React.Fragment
     //(reference: https://reactjs.org/docs/fragments.html)
     <Fragment>
+      //see above import BannerImage from '../components/banner/bannerImage'
       <BannerImage
         titleText={'Pride in London'}
         subtitleText={
@@ -198,6 +199,7 @@ const Home = ({
         //as well
         fixed={childImageSharp}
       >
+        //refer to above const BannerButton = styled(Button)`
         <BannerButton
           wide={false}
           white
@@ -207,6 +209,7 @@ const Home = ({
           Help keep Pride free
         </BannerButton>
       </BannerImage>
+      //refer to above const StyledContainer = styled(Container)`
       <StyledContainer>
         <StyledRow>
           <StyledColumn width={1}>
