@@ -155,6 +155,7 @@ const StyledButton = styled(Button)`
   padding: 12px 28px;
 `
 
+//<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">Arrow functions</a>, 
 const Home = ({
   data: {
     file: { childImageSharp },
