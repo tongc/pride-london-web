@@ -17,8 +17,11 @@ import AnnouncementsContainer from '../features/homepage/containers/announcement
 import DonateContainer from '../features/homepage/containers/donateContainer'
 
 //` (back-tick, the key below ESC key) is called "Template string", which is responsbile of making a string but allowing variables/interpolation i.e. ${myvariable}
+//(reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+
 //styled is a javascript libaray (https://www.styled-components.com/) for constructing CSS and styled.div is a function
 //(reference: https://www.styled-components.com/docs/advanced#theming)
+
 //Here, an advanced form of template string called "Tagged templates" is used where the content between back-ticks are passed to styled.div function
 //(reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates)
 
