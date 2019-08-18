@@ -182,6 +182,9 @@ const Home = ({
         large
         allowContentUnderflow
         videoId="348603446"
+        //Here, this line can be written as
+        //fixed={data.file.childImageSharp}
+        //as well
         fixed={childImageSharp}
       >
         <BannerButton
