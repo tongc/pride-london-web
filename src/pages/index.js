@@ -17,7 +17,7 @@ import AnnouncementsContainer from '../features/homepage/containers/announcement
 import DonateContainer from '../features/homepage/containers/donateContainer'
 
 //` (back-tick, the key below ESC key), is responsbile of making a string but allowing variables/interpolation i.e. ${myvariable}
-//styled is a javascript libaray for constructing CSS and styled.div is a method
+//styled is a javascript libaray (https://www.styled-components.com/) for constructing CSS and styled.div is a method
 //in this case styled.div is taking below `...` as input parameter
 const FeaturedEventsContainer = styled.div`
   background-color: #282a80;
