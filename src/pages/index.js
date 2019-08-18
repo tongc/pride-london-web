@@ -162,7 +162,7 @@ const StyledButton = styled(Button)`
 //}
 
 //And data is from Gatsby graphQl component. See HomePageQuery at the bottom of the page, 
-//where the result of HomePageQuery is fed into data input parameter.
+//where the result of HomePageQuery is fed into data input parameter. (reference: "The result of the query is automatically inserted into your React component on the data prop." from https://www.gatsbyjs.org/docs/querying-with-graphql/#what-does-a-graphql-query-look-like)
 //As you can notice, inside HomePageQuery there are file and childImageSharp variables. 
 const Home = ({
   data: {
