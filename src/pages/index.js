@@ -155,7 +155,11 @@ const StyledButton = styled(Button)`
   padding: 12px 28px;
 `
 
-//<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">Arrow functions</a>, 
+//Arrow functions, just like normal functions, but doesn't give function a name
+//in below case, if we rewrite it as normal functions it would be like
+//const Home = function something(data) {
+//  return (<Fragment>...</Fragment>)
+//}
 const Home = ({
   data: {
     file: { childImageSharp },
