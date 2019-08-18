@@ -16,8 +16,12 @@ import LatestNewsContainer from '../features/homepage/containers/latestNewsConta
 import AnnouncementsContainer from '../features/homepage/containers/announcementsContainer'
 import DonateContainer from '../features/homepage/containers/donateContainer'
 
-//` (back-tick, the key below ESC key), is responsbile of making a string but allowing variables/interpolation i.e. ${myvariable}
-//styled is a javascript libaray (https://www.styled-components.com/) for constructing CSS and styled.div is a method
+//` (back-tick, the key below ESC key) is called "Template string", which is responsbile of making a string but allowing variables/interpolation i.e. ${myvariable}
+//styled is a javascript libaray (https://www.styled-components.com/) for constructing CSS and styled.div is a function
+//(reference: https://www.styled-components.com/docs/advanced#theming)
+//Here, an advanced form of template string called "Tagged templates" is used where the content between back-ticks are passed to styled.div function
+//(reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates)
+
 //in this case styled.div is taking below `...` as input parameter
 const FeaturedEventsContainer = styled.div`
   background-color: #282a80;
