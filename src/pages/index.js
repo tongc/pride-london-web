@@ -163,6 +163,7 @@ const StyledButton = styled(Button)`
 
 //And data is from Gatsby graphQl component. See HomePageQuery at the bottom of the page, 
 //where the result of HomePageQuery is fed into data input parameter.
+//As you can notice, inside HomePageQuery there are file and childImageSharp variables. 
 const Home = ({
   data: {
     file: { childImageSharp },
