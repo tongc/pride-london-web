@@ -179,6 +179,8 @@ const Home = ({
   },
 }) => {
   return (
+    //React.Fragment
+    //(reference: https://reactjs.org/docs/fragments.html)
     <Fragment>
       <BannerImage
         titleText={'Pride in London'}
